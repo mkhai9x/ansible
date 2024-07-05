@@ -1,0 +1,19 @@
+- name: Download and install Oh My Posh
+  shell:
+    cmd: curl -s https://ohmyposh.dev/install.sh | bash -s
+
+- name: Remove existing Oh My Posh themes
+  file:
+    path: "~/.poshthemes"
+    state: absent
+- name: Download all Oh My Posh themes
+  shell: |
+    mkdir -p ~/.poshthemes && \
+    curl -sL https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip -o ~/.poshthemes/themes.zip && \
+    unzip ~/.poshthemes/themes.zip -d ~/.poshthemes && \
+    chmod u+rw ~/.poshthemes/*.json && \
+    rm ~/.poshthemes/themes.zip
+
+- name: Install JetBrainsMono Nerd Font
+  shell:
+    cmd: oh-my-posh font install JetBrainsMono

@@ -1,0 +1,38 @@
+- name: Install dependencies for pyenv
+  tags:
+    - python
+  apt:
+    name:
+      - make
+      - build-essential
+      - libssl-dev
+      - zlib1g-dev
+      - libbz2-dev
+      - libreadline-dev
+      - libsqlite3-dev
+      - wget
+      - curl
+      - llvm
+      - libncurses5-dev
+      - libncursesw5-dev
+      - xz-utils
+      - tk-dev
+      - libffi-dev
+      - liblzma-dev
+      - python3-openssl
+      - git
+    state: latest
+
+- name: Clone pyenv repository
+  tags:
+    - python
+  git:
+    repo: https://github.com/pyenv/pyenv.git
+    dest: ~/.pyenv
+- name: Install Python 3.12 using pyenv
+  tags:
+    - python
+  shell: |
+    eval "$($HOME/.pyenv/bin/pyenv init -)"
+    $HOME/.pyenv/bin/pyenv install 3.12.0
+    $HOME/.pyenv/bin/pyenv global 3.12.0
