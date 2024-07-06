@@ -17,6 +17,7 @@
       - curl
       - ripgrep
       - tree
+      - ansible-lint
       - fd-find
       - locales
       - bc

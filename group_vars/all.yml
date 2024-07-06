@@ -7,6 +7,7 @@ default_roles:
   - sshfs
   - fonts
   - lazygit
+  - neovim
 
 git_user_name: "mkhai9x"
 git_user_email: !vault |

@@ -29,5 +29,6 @@
       - localstack
       - fzf
       - bun
+      - neovim
     state: present
   become: false

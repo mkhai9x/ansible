@@ -1,0 +1,38 @@
+---
+- name: "Neovim | {{ ansible_distribution }} | Dependencies"
+  ansible.builtin.apt:
+    name:
+      - ninja-build
+      - gettext
+      - libtool
+      - libtool-bin
+      - autoconf
+      - automake
+      - cmake
+      - g++
+      - pkg-config
+      - unzip
+    state: latest
+  become: true
+
+- name: "Neovim | {{ ansible_distribution }} | Clone Neovim git repo"
+  git:
+    repo: https://github.com/neovim/neovim.git
+    dest: /usr/local/src/neovim
+    update: yes
+    version: stable
+  become: true
+
+- name: "Neovim | {{ ansible_distribution }} | Build Neovim"
+  become: true
+  ansible.builtin.command: make CMAKE_BUILD_TYPE=Release
+  args:
+    chdir: /usr/local/src/neovim
+  when: ansible_distribution != "MacOSX"
+
+- name: "Neovim | {{ ansible_distribution }} | Install Neovim"
+  become: true
+  ansible.builtin.command: make install
+  args:
+    chdir: /usr/local/src/neovim
+  when: ansible_distribution != "MacOSX"
