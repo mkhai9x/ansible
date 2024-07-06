@@ -23,6 +23,7 @@
       - tree
       - ripgrep
       - fd
+      - lazygit
       - socat
       - bat
       - localstack

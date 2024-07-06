@@ -6,6 +6,7 @@ default_roles:
   - ssh
   - sshfs
   - fonts
+  - lazygit
 
 git_user_name: "mkhai9x"
 git_user_email: !vault |
