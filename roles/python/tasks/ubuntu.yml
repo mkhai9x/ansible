@@ -30,6 +30,13 @@
     update: yes
   become: false
 
+- name: "Python | {{ ansible_distribution }} | Check if Python versions are already installed"
+  ansible.builtin.command: "{{ ansible_user_dir }}/.pyenv/bin/pyenv versions --bare"
+  register: pyenv_versions
+  changed_when: false
+  failed_when: false
+  become: false
+
 - name: "Python | {{ ansible_distribution }} | Install Python versions using pyenv"
   ansible.builtin.shell: |
     export PYENV_ROOT="{{ ansible_user_dir }}/.pyenv"
@@ -44,6 +51,7 @@
     PYENV_ROOT: "{{ ansible_user_dir }}/.pyenv"
     PATH: "{{ ansible_user_dir }}/.pyenv/bin:{{ ansible_user_dir }}/.pyenv/shims:{{ ansible_env.PATH }}"
   loop: "{{ python_versions }}"
+  when: item not in pyenv_versions.stdout
   register: pyenv_install
   changed_when: "'already installed' not in pyenv_install.stdout"
 
