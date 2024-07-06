@@ -3,6 +3,8 @@ default_roles:
   - ohmyposh
   - fzf
   - git
+  - ssh
+  - sshfs
 
 git_user_name: "mkhai9x"
 git_user_email: !vault |
