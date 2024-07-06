@@ -1,0 +1,31 @@
+---
+- name: "System | {{ ansible_distribution }} | Check if Homebrew is installed"
+  ansible.builtin.stat:
+    path: /opt/homebrew/bin/brew
+  register: brew_check
+
+- name: "System | {{ ansible_distribution }} Install Homebrew"
+  ansible.builtin.command: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  when: not brew_check.stat.exists
+  become: false
+
+- name: "System | {{ ansible_distribution }} | Update Homebrew and Upgrade Packages"
+  block:
+    - name: "System | {{ ansible_distribution }} | Homebrew update"
+      ansible.builtin.command: brew update
+    - name: "System | {{ ansible_distribution }} | Homebrew upgrade"
+      ansible.builtin.command: brew upgrade
+  become: false
+
+- name: "System | {{ ansible_distribution }} | Install Packages"
+  ansible.builtin.homebrew:
+    name:
+      - tree
+      - ripgrep
+      - fd
+      - socat
+      - bat
+      - localstack
+      - bun
+    state: present
+  become: false
