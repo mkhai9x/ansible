@@ -23,3 +23,6 @@
   args:
     creates: "{{ ansible_user_dir }}/.nvm/nvm.sh"
     executable: /bin/bash
+- name: "NODE | {{ ansible_distribution }} | Install node using nvm and set version"
+  shell: >
+    /bin/bash -c "source ~/.nvm/nvm.sh && nvm install --lts  && nvm alias default node"
