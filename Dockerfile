@@ -28,6 +28,7 @@ RUN echo 'mkhai9x ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER mkhai9x
 WORKDIR /home/mkhai9x
 
+ENV USER=mkhai9x
 
 FROM mkhai9x
 COPY . .

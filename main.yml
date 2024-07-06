@@ -9,6 +9,12 @@
       tags:
         - always
 
+    - name: Run system role in pre_tasks to update cache and install some core packages base on the current linux distribution
+      ansible.builtin.include_role:
+        name: system
+      tags:
+        - always
+
   tasks:
     - name: Set roles
       ansible.builtin.set_fact:
