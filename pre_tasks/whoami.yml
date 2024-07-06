@@ -1,0 +1,11 @@
+---
+- name: Register Current User
+  ansible.builtin.set_fact:
+    host_user: "{{ ansible_env['USER'] }}"
+  when: host_user is not defined
+- name: Print Current User
+  ansible.builtin.debug:
+    msg: "Current user is {{ host_user }}"
+- name: Print Home Directory
+  ansible.builtin.debug:
+    msg: "Home directory is {{ ansible_env['HOME'] }}"
