@@ -6,20 +6,26 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Update the package list and install dependencies
 RUN apt-get update && \
-    apt-get install -y software-properties-common curl git zsh build-essential && \
+    apt-get install -y software-properties-common sudo curl git zsh build-essential && \
     apt-add-repository --yes --update ppa:ansible/ansible && \
     apt-get install -y ansible && \
     apt-get clean autoclean && \
-    apt-get autoremove --yes \
+    apt-get autoremove --yes && \
     rm -rf /var/lib/apt/lists/*
+
 
 FROM base AS mkhai9x
 ARG TAGS
 
-RUN addgroup --gid 1000 mkhai9x
-RUN adduser --gecos mkhai9x --uid 1000 --gid 1000 --disabled-password mkhai9x
+
+RUN addgroup --gid 1001 mkhai9x
+RUN adduser --gecos mkhai9x --uid 1001 --gid 1001 --disabled-password mkhai9x
+
+RUN echo 'mkhai9x ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
 # Set the working directory
-USER theprimeagen
+#
+USER mkhai9x
 WORKDIR /home/mkhai9x
 
 
