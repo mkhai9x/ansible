@@ -5,6 +5,7 @@ default_roles:
   - git
   - ssh
   - sshfs
+  - fonts
 
 git_user_name: "mkhai9x"
 git_user_email: !vault |
