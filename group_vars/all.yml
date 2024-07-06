@@ -9,6 +9,12 @@ default_roles:
   - lazygit
   - neovim
   - node
+  - python
+
+python_versions:
+  - 3.10.2
+  - 3.12.0
+python_global_version: 3.12.0
 
 git_user_name: "mkhai9x"
 git_user_email: !vault |
