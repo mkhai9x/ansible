@@ -4,6 +4,7 @@
   file:
     path: "{{ ansible_user_dir }}/.ssh"
     state: absent
+  become: true
 - name: "SSH | Ensure .ssh directory exists and is owned by the correct user"
   file:
     path: "{{ ansible_user_dir }}/.ssh"
