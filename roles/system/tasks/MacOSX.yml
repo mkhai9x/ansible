@@ -26,6 +26,7 @@
       - socat
       - bat
       - localstack
+      - fzf
       - bun
     state: present
   become: false
