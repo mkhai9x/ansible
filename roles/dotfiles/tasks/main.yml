@@ -1,0 +1,25 @@
+---
+- name: "dotfiles | Checking for Distribution Config: {{ ansible_distribution }}"
+  ansible.builtin.stat:
+    path: "{{ role_path }}/tasks/{{ ansible_distribution }}.yml"
+  register: dotfiles_distribution_config
+
+- name: "dotfiles | Run Tasks: {{ ansible_distribution }}"
+  ansible.builtin.include_tasks: "{{ ansible_distribution }}.yml"
+  when: dotfiles_distribution_config.stat.exists
+
+- name: "dotfiles | Remove existing .dotfiles"
+  file:
+    path: "{{ ansible_user_dir }}/.dotfiles"
+    state: absent
+
+- name: "dotfiles | Clone .dotfiles"
+  ansible.builtin.git:
+    repo: git@github.com:mkhai9x/.dotfiles.git
+    dest: "{{ ansible_user_dir }}/.dotfiles"
+    update: yes
+    accept_hostkey: yes
+    version: main
+
+- name: "dotfiles | Stow .dotfiles"
+  ansible.builtin.shell: cd {{ ansible_user_dir }}/.dotfiles && ./install
