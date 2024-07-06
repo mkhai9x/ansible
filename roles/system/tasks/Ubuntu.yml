@@ -1,0 +1,36 @@
+---
+- name: "System | {{ ansible_distribution }} | Update APT Repos and Upgrade APT Packages"
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    upgrade: full
+    autoremove: true
+    autoclean: true
+
+- name: "System | {{ ansible_distribution }} | Install"
+  become: true
+  ansible.builtin.apt:
+    name:
+      - jq
+      - open-iscsi
+      - git
+      - curl
+      - ripgrep
+      - tree
+      - fd-find
+      - locales
+      - bc
+      - coreutils
+      - gawk
+      - unzip
+      - playerctl
+    state: present
+
+# We want install those local for the current user
+- name: "System | {{ ansible_distribution }} | Install locale-gen en_US.UTF-8, locale-gen en_AU, locale-gen en_AU.UTF-8"
+  become: true
+  shell: |
+    locale-gen en_US
+    locale-gen en_US.UTF-8
+    locale-gen en_AU
+    locale-gen en_AU.UTF-8

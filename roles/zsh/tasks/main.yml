@@ -1,0 +1,60 @@
+---
+- name: "Zsh | Detect oh-my-zsh"
+  ansible.builtin.stat:
+    path: "{{ ansible_user_dir }}/.oh-my-zsh"
+  register: ohmyzsh
+
+- name: "Zsh | Register oh-my-zsh state"
+  ansible.builtin.set_fact:
+    ohmyzsh_is_installed: "{{ ohmyzsh.stat.exists }}"
+
+- name: "Bash | Debug ohmyzsh_is_installed"
+  ansible.builtin.debug:
+    var: ohmyzsh_is_installed
+
+- name: "Zsh | Install zsh"
+  apt:
+    name: zsh
+    state: latest
+
+- name: "Zsh | Install oh-my-zsh"
+  when: not ohmyzsh_is_installed
+  shell:
+    cmd: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || true
+
+- name: "Zsh | Install zsh plugin auto suggesstions"
+  git:
+    repo: https://github.com/zsh-users/zsh-autosuggestions
+    dest: "{{ ansible_user_dir }}/.oh-my-zsh/plugins/zsh-autosuggestions"
+
+- name: " Zsh | Install zsh syntax highlighting"
+  git:
+    repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+    dest: "{{ ansible_user_dir }}/.oh-my-zsh/plugins/zsh-syntax-highlighting"
+
+- name: "Zsh | Copy .zshrc"
+  ansible.builtin.copy:
+    src: ".zshrc"
+    dest: "{{ ansible_user_dir }}/.zshrc"
+    mode: "0644"
+
+- name: "Zsh | Copy custom zsh config"
+  ansible.builtin.copy:
+    dest: "{{ ansible_user_dir }}/.config/"
+    src: "zsh"
+    mode: "0644"
+    directory_mode: "0755"
+    force: true
+
+- name: "Zsh | Set default terminal"
+  ansible.builtin.user:
+    name: "{{ host_user }}"
+    shell: /usr/bin/zsh
+  become: true
+
+- name: "Zsh | Set private variables"
+  ansible.builtin.template:
+    dest: "{{ ansible_user_dir }}/.config/zsh/.zsh_private"
+    src: ".zsh_private.j2"
+    mode: "0644"
+  no_log: true

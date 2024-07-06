@@ -1,0 +1,55 @@
+---
+- name: "Oh my posh | Download and install Oh My Posh"
+  become: true
+  shell:
+    cmd: curl -s https://ohmyposh.dev/install.sh | bash -s
+
+- name: "Oh my posh | Remove existing Oh My Posh themes"
+  file:
+    path: "{{ ansible_user_dir }}/.poshthemes"
+    state: absent
+
+- name: "Oh my posh | Ensure ~/.poshthemes directory exists"
+  ansible.builtin.file:
+    path: /home/{{ host_user }}/.poshthemes
+    state: directory
+    mode: "0755"
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+
+- name: "Oh my posh | Download oh-my-posh themes zip"
+  ansible.builtin.get_url:
+    url: https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip
+    dest: /home/{{ host_user }}/.poshthemes/themes.zip
+    mode: "0644"
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+
+- name: "Oh my posh | Unzip oh-my-posh themes"
+  ansible.builtin.unarchive:
+    src: /home/{{ host_user }}/.poshthemes/themes.zip
+    dest: /home/{{ host_user }}/.poshthemes
+    remote_src: yes
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+
+- name: "Oh my posh | Change permissions for JSON files"
+  ansible.builtin.find:
+    paths: /home/{{ host_user }}/.poshthemes
+    patterns: "*.json"
+  register: json_files
+
+- name: "Oh my posh | Set permissions for JSON files"
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: "0644"
+  loop: "{{ json_files.files }}"
+
+- name: "Oh my posh | Remove themes.zip"
+  ansible.builtin.file:
+    path: /home/{{ host_user }}/.poshthemes/themes.zip
+    state: absent
+
+- name: "Oh my posh | Install JetBrainsMono Nerd Font"
+  shell:
+    cmd: oh-my-posh font install JetBrainsMono
