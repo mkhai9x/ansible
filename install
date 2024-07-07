@@ -189,11 +189,13 @@ fi
 pushd "$ANSIBLE_DIR" 2>&1 >/dev/null
 update_ansible_galaxy $ID
 
-_task "Running playbook"
+_task "Start running playbook"
 _task_done
 if [[ -f $VAULT_SECRET ]]; then
+  _task "Running playbook with vault secret"
   ansible-playbook --vault-password-file $VAULT_SECRET "$ANSIBLE_DIR/main.yml" "$@"
 else
+  _task "Running playbook without vault secret"
   ansible-playbook "$ANSIBLE_DIR/main.yml" "$@"
 fi
 
