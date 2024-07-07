@@ -1,10 +1,9 @@
 ---
 # TODO: We could have a bash script to create the .ssh folder at the current user so that the .ssh folder will have the correct permission and then we can run ansible-playbook
-- name: "SSH | Remove existing ~/.ssh"
-  file:
+- name: "SSH | Check if ~/.ssh directory exists"
+  stat:
     path: "{{ ansible_user_dir }}/.ssh"
-    state: absent
-  become: true
+  register: ssh_dir_stat
 - name: "SSH | Ensure .ssh directory exists and is owned by the correct user"
   file:
     path: "{{ ansible_user_dir }}/.ssh"
@@ -12,6 +11,17 @@
     mode: "0700"
     owner: "{{ host_user }}"
     group: "{{ host_user }}"
+  when: not ssh_dir_stat.stat.exists
+
+- name: "SSH | Change ownership of existing .ssh directory"
+  file:
+    path: "{{ ansible_user_dir }}/.ssh"
+    state: directory
+    mode: "0700"
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+  when: ssh_dir_stat.stat.exists
+
 - name: "SSH | Copy SSH keys"
   copy:
     dest: "{{ ansible_user_dir }}/.ssh/{{ ssh_key_item.key }}"
