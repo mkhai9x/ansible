@@ -39,7 +39,7 @@ set -e
 
 # Paths
 VAULT_SECRET="$HOME/.ansible-vault/vault.secret"
-ANSIBLE_DIR="$HOME/.ansible"
+ANSIBLE_DIR="$HOME/ansible"
 SSH_DIR="$HOME/.ssh"
 IS_FIRST_RUN="$HOME/.dotfiles_run"
 # _header colorize the given argument with spacing
