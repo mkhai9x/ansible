@@ -12,6 +12,7 @@ default_roles:
   - python
   - tmux
   - dotfiles
+  - tldr
 
 python_versions:
   - 3.10.2
