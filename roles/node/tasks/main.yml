@@ -1,5 +1,5 @@
 # TODO: For MACOS, we need to install it in different way not using Homebrew
 ---
 - name: Run Ubuntu Tasks
-  ansible.builtin.import_tasks: ubuntu.yml
+  ansible.builtin.include_tasks: ./ubuntu.yml
   when: ansible_os_family == 'Debian'

@@ -191,7 +191,7 @@ else
   _cmd "git -C $ANSIBLE_DIR pull --quiet"
 fi
 
-cd "$ANSIBLE_DIR"
+pushd "$ANSIBLE_DIR" 2>&1 >/dev/null
 update_ansible_galaxy $ID
 
 _task "Start running playbook"
