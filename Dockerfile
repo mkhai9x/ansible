@@ -31,7 +31,6 @@ WORKDIR /home/mkhai9x
 ENV USER=mkhai9x
 
 FROM mkhai9x
-COPY . .
 # Default command to run when container starts
 CMD [ "ansible", "--version" ]
 # CMD ["sh", "-c", "ansible-playbook $TAGS local.yml"]
