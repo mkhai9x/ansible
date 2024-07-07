@@ -92,7 +92,7 @@ function ubuntu_setup() {
   _cmd "sudo apt update"
   if ! dpkg -s ansible >/dev/null 2>&1; then
     _task "Installing Ansible"
-    _cmd "sudo apt install -y software-properties-common git curl"
+    _cmd "export DEBIAN_FRONTEND=noninteractive && sudo apt install -y software-properties-common git curl"
     _cmd "sudo apt-add-repository -y ppa:ansible/ansible"
     _cmd "sudo apt install -y ansible"
     _cmd "sudo apt clean autoclean"
