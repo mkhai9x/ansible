@@ -197,9 +197,9 @@ update_ansible_galaxy $ID
 _task "Start running playbook"
 _task_done
 
+export USER=$(whoami)
 if [[ -f $VAULT_SECRET ]]; then
   _task "Running playbook with vault secret"
-  export USER=$(whoami)
   ansible-playbook --vault-password-file $VAULT_SECRET "main.yml" "$@"
 else
   _task "Running playbook without vault secret"
