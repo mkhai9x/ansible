@@ -1,5 +1,5 @@
 # TODO: For MACOS lazygit is include in the MacOS.yml already
 ---
-- name: Run Ubuntu Tasks
+- name: "LAZYGIT | Run Ubuntu Tasks"
   ansible.builtin.include_tasks: ./ubuntu.yml
   when: ansible_os_family == 'Debian'

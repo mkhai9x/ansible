@@ -1,4 +1,4 @@
 ---
-- name: Run Ubuntu Tasks
+- name: "FZF | Run Ubuntu Tasks"
   ansible.builtin.include_tasks: ./ubuntu.yml
   when: ansible_os_family == 'Debian'
