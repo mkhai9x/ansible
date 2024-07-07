@@ -92,6 +92,7 @@ function ubuntu_setup() {
   _cmd "sudo apt update"
 
   export DEBIAN_FRONTEND=noninteractive
+  # SET sudo -E to not drop environment variables in the curretn shell
   if ! dpkg -s ansible >/dev/null 2>&1; then
     _task "Installing Ansible"
     _cmd "sudo -E apt-get update"
@@ -113,14 +114,17 @@ function ubuntu_setup() {
   if ! dpkg -s python3 >/dev/null 2>&1; then
     _task "Installing Python3"
     _cmd "sudo apt-get install -y python3"
+    _task_done
   fi
   if ! dpkg -s python3-pip >/dev/null 2>&1; then
     _task "Installing Python3 Pip"
     _cmd "sudo apt-get install -y python3-pip"
+    _task_done
   fi
   if ! pip3 list | grep watchdog >/dev/null 2>&1; then
     _task "Installing Python3 Watchdog"
     _cmd "sudo apt-get install -y python3-watchdog"
+    _task_done
   fi
 }
 
@@ -161,8 +165,10 @@ update_ansible_galaxy() {
   if [ -f "$ANSIBLE_DIR/requirements/$os.yml" ]; then
     _task "${OVERWRITE}Updating Ansible Galaxy with OS Config: $os"
     os_requirements="$ANSIBLE_DIR/requirements/$os.yml"
+    _task_done
   fi
   _cmd "ansible-galaxy install -r $ANSIBLE_DIR/requirements/common.yml $os_requirements"
+  _task_done
 }
 
 source /etc/os-release
@@ -179,6 +185,7 @@ arch)
   _cmd "echo 'Unsupported OS'"
   ;;
 esac
+_task_done
 
 if ! [[ -f "$SSH_DIR/authorized_keys" ]]; then
   _task "Generating SSH keys"
@@ -188,14 +195,17 @@ if ! [[ -f "$SSH_DIR/authorized_keys" ]]; then
   _cmd "chmod 700 $SSH_DIR"
   _cmd "ssh-keygen -b 4096 -t rsa -f $SSH_DIR/id_rsa -N '' -C $USER@$HOSTNAME"
   _cmd "cat $SSH_DIR/id_rsa.pub >> $SSH_DIR/authorized_keys"
+  _task_done
 fi
 
 if ! [[ -d "$ANSIBLE_DIR" ]]; then
   _task "Cloning ansible repository"
   _cmd "git clone --quiet https://github.com/mkhai9x/ansible.git $ANSIBLE_DIR"
+  _task_done
 else
   _task "Updating repository"
   _cmd "git -C $ANSIBLE_DIR pull --quiet"
+  _task_done
 fi
 
 pushd "$ANSIBLE_DIR" 2>&1 >/dev/null
@@ -208,9 +218,11 @@ export USER=$(whoami)
 if [[ -f $VAULT_SECRET ]]; then
   _task "Running playbook with vault secret"
   ansible-playbook --vault-password-file $VAULT_SECRET "main.yml" "$@"
+  _task_done
 else
   _task "Running playbook without vault secret"
   ansible-playbook "main.yml" "$@"
+  _task_done
 fi
 
 popd 2>&1 >/dev/null

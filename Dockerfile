@@ -14,23 +14,23 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 
-FROM base AS mkhai9x
+FROM base AS nonroot
 ARG TAGS
 
 
-RUN addgroup --gid 1001 mkhai9x
-RUN adduser --gecos mkhai9x --uid 1001 --gid 1001 --disabled-password mkhai9x
+RUN addgroup --gid 1001 nonroot
+RUN adduser --gecos nonroot --uid 1001 --gid 1001 --disabled-password nonroot
 
-RUN echo 'mkhai9x ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN echo 'nonroot ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # Set the working directory
 #
-USER mkhai9x
-WORKDIR /home/mkhai9x
+USER nonroot
+WORKDIR /home/nonroot
 
-ENV USER=mkhai9x
+ENV USER=nonroot
 
-FROM mkhai9x
+FROM nonroot
 # Default command to run when container starts
 CMD [ "ansible", "--version" ]
 # CMD ["sh", "-c", "ansible-playbook $TAGS local.yml"]
