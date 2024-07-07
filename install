@@ -39,6 +39,7 @@ set -e
 
 # Paths
 VAULT_SECRET="$HOME/.ansible-vault/vault.secret"
+DEBIAN_FRONTEND=noninteractive
 ANSIBLE_DIR="$HOME/ansible"
 SSH_DIR="$HOME/.ssh"
 IS_FIRST_RUN="$HOME/.dotfiles_run"
@@ -91,7 +92,7 @@ function ubuntu_setup() {
   _cmd "sudo apt update"
   if ! dpkg -s ansible >/dev/null 2>&1; then
     _task "Installing Ansible"
-    _cmd "sudo apt install -y software-properties-common"
+    _cmd "sudo apt install -y software-properties-common git curl"
     _cmd "sudo apt-add-repository -y ppa:ansible/ansible"
     _cmd "sudo apt install -y ansible"
     _cmd "sudo apt clean autoclean"
@@ -99,6 +100,7 @@ function ubuntu_setup() {
     _cmd "sudo rm -rf /var/lib/apt/lists/*"
   fi
   _task "Installing python3-argcomplete"
+  _cmd "sudo apt update"
   _cmd "sudo apt-get install python3-argcomplete"
   _cmd "sudo activate-global-python-argcomplete"
   if ! dpkg -s python3 >/dev/null 2>&1; then
@@ -158,7 +160,6 @@ update_ansible_galaxy() {
 
 source /etc/os-release
 _task "Loading Setup for detected OS: $ID"
-export DEBIAN_FRONTEND=noninteractive
 case $ID in
 ubuntu)
   ubuntu_setup
@@ -198,6 +199,7 @@ _task_done
 
 if [[ -f $VAULT_SECRET ]]; then
   _task "Running playbook with vault secret"
+  export USER=$(whoami)
   ansible-playbook --vault-password-file $VAULT_SECRET "main.yml" "$@"
 else
   _task "Running playbook without vault secret"
