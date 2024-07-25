@@ -109,7 +109,7 @@ function ubuntu_setup() {
   _task "Installing python3-argcomplete"
   _cmd "sudo apt update"
   _cmd "sudo apt-get install python3-argcomplete"
-  _cmd "sudo activate-global-python-argcomplete"
+  # _cmd "sudo activate-global-python-argcomplete"
   _task_done
   if ! dpkg -s python3 >/dev/null 2>&1; then
     _task "Installing Python3"
